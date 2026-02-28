@@ -57,6 +57,42 @@ export default function AdminApplicationDetailPage() {
   const router = useRouter();
 
   useEffect(() => {
+    const fetchApplicationDetails = async () => {
+      try {
+        const { data: appData, error: appError } = await supabase
+          .from("applications")
+          .select(`
+          id,
+          application_id,
+          status,
+          remarks,
+          created_at,
+          user_id,
+          users (name, email, phone),
+          services (name, description)
+        `)
+          .eq("id", id)
+          .single();
+
+        if (appError) throw appError;
+        setApplication(appData as any);
+        setStatus(appData.status);
+        setRemarks(appData.remarks || "");
+
+        const { data: docsData, error: docsError } = await supabase
+          .from("documents")
+          .select("*")
+          .eq("application_id", id);
+
+        if (docsError) throw docsError;
+        setDocuments(docsData || []);
+      } catch (error) {
+        console.error("Error fetching application details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchApplicationDetails();
   }, [id]);
 

@@ -12,10 +12,10 @@ import {
   Calendar
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
-import { auth } from "@/lib/firebase";
-import { onAuthStateChanged } from "firebase/auth";
+import { useAuth } from "@/lib/context/AuthContext";
 
 export default function ProfilePage() {
+  const { user, loading: authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [userData, setUserData] = useState({
@@ -28,15 +28,12 @@ export default function ProfilePage() {
   const [message, setMessage] = useState({ type: "", text: "" });
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        fetchProfile(user.uid);
-      } else {
-        setLoading(false);
-      }
-    });
-    return () => unsubscribe();
-  }, []);
+    if (user) {
+      fetchProfile(user.uid);
+    } else if (!authLoading) {
+      setLoading(false);
+    }
+  }, [user, authLoading]);
 
   const fetchProfile = async (userId: string) => {
     try {
@@ -61,7 +58,6 @@ export default function ProfilePage() {
     setMessage({ type: "", text: "" });
 
     try {
-      const user = auth.currentUser;
       if (!user) throw new Error("User not found");
 
       const { error } = await supabase

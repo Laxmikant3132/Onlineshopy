@@ -165,7 +165,8 @@ export default function LandingPage() {
     if (isPaused) return;
     
     // Smooth speed independent of frame rate
-    const moveBy = -1.2 * (delta / 16); 
+    const frameDelta = Math.min(delta, 32); // Cap delta to prevent jumps
+    const moveBy = -1.2 * (frameDelta / 16); 
     const currentX = x.get() + moveBy;
     
     if (currentX <= -totalWidth) {

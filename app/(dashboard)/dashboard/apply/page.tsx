@@ -14,7 +14,7 @@ import {
   FileText
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
-import { auth } from "@/lib/firebase";
+import { useAuth } from "@/lib/context/AuthContext";
 import { useLanguage } from "@/lib/context/LanguageContext";
 import { useRouter } from "next/navigation";
 
@@ -27,6 +27,7 @@ interface Service {
 
 export default function ApplyPage() {
   const { t } = useLanguage();
+  const { user } = useAuth();
   const [services, setServices] = useState<Service[]>([]);
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [step, setStep] = useState(1);
@@ -80,7 +81,6 @@ export default function ApplyPage() {
     setError("");
 
     try {
-      const user = auth.currentUser;
       if (!user) throw new Error("User not found");
 
       // 1. Generate Application ID

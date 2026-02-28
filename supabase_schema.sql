@@ -66,3 +66,10 @@ ON CONFLICT (id) DO NOTHING;
 -- Enable public access for the documents bucket
 CREATE POLICY "Public Access" ON storage.objects FOR ALL USING ( bucket_id = 'documents' );
 CREATE POLICY "Public Upload" ON storage.objects FOR INSERT WITH CHECK ( bucket_id = 'documents' );
+
+-- 8. Add Indexes for Performance
+CREATE INDEX IF NOT EXISTS idx_applications_user_id ON public.applications(user_id);
+CREATE INDEX IF NOT EXISTS idx_applications_status ON public.applications(status);
+CREATE INDEX IF NOT EXISTS idx_applications_application_id ON public.applications(application_id);
+CREATE INDEX IF NOT EXISTS idx_documents_application_id ON public.documents(application_id);
+CREATE INDEX IF NOT EXISTS idx_users_email ON public.users(email);

@@ -14,6 +14,7 @@ import {
   Zap
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/lib/context/AuthContext";
 import Link from "next/link";
 
 interface Application {
@@ -31,6 +32,7 @@ interface Application {
 }
 
 export default function AdminDashboard() {
+  const { role, loading: authLoading } = useAuth();
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -42,8 +44,12 @@ export default function AdminDashboard() {
   });
 
   useEffect(() => {
-    fetchAllApplications();
-  }, []);
+    if (!authLoading && role === "admin") {
+      fetchAllApplications();
+    } else if (!authLoading) {
+      setLoading(false);
+    }
+  }, [role, authLoading]);
 
   const fetchAllApplications = async () => {
     try {

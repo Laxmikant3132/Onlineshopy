@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/lib/context/LanguageContext";
+import { AuthProvider } from "@/lib/context/AuthContext";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -22,7 +23,9 @@ export default function RootLayout({
     <html lang="en" className={`${montserrat.variable}`}>
       <body className="antialiased font-montserrat">
         <LanguageProvider>
-          {children}
+          <AuthProvider>
+            {children}
+          </AuthProvider>
         </LanguageProvider>
       </body>
     </html>

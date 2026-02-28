@@ -43,6 +43,38 @@ export default function ApplicationDetailPage() {
   const router = useRouter();
 
   useEffect(() => {
+    const fetchApplicationDetails = async () => {
+      try {
+        const { data: appData, error: appError } = await supabase
+          .from("applications")
+          .select(`
+          id,
+          application_id,
+          status,
+          remarks,
+          created_at,
+          services (name, description)
+        `)
+          .eq("id", id)
+          .single();
+
+        if (appError) throw appError;
+        setApplication(appData as any);
+
+        const { data: docsData, error: docsError } = await supabase
+          .from("documents")
+          .select("*")
+          .eq("application_id", id);
+
+        if (docsError) throw docsError;
+        setDocuments(docsData || []);
+      } catch (error) {
+        console.error("Error fetching application details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchApplicationDetails();
   }, [id]);
 
@@ -220,7 +252,7 @@ export default function ApplicationDetailPage() {
             </h3>
             <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100 min-h-[150px]">
               {application.remarks ? (
-                <p className="text-gray-700 italic font-medium leading-relaxed">"{application.remarks}"</p>
+                <p className="text-gray-700 italic font-medium leading-relaxed">&quot;{application.remarks}&quot;</p>
               ) : (
                 <div className="flex flex-col items-center justify-center h-full text-gray-400 space-y-2">
                   <p className="text-sm font-medium">No remarks from administrator yet.</p>

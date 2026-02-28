@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { auth } from "@/lib/firebase";
-import { onAuthStateChanged } from "firebase/auth";
+import { useAuth } from "@/lib/context/AuthContext";
 import { useLanguage } from "@/lib/context/LanguageContext";
 import Link from "next/link";
 
@@ -31,6 +31,7 @@ interface Application {
 
 export default function CustomerDashboard() {
   const { t } = useLanguage();
+  const { user, loading: authLoading } = useAuth();
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
@@ -40,15 +41,12 @@ export default function CustomerDashboard() {
   });
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        fetchApplications(user.uid);
-      } else {
-        setLoading(false);
-      }
-    });
-    return () => unsubscribe();
-  }, []);
+    if (user) {
+      fetchApplications(user.uid);
+    } else if (!authLoading) {
+      setLoading(false);
+    }
+  }, [user, authLoading]);
 
   const fetchApplications = async (userId: string) => {
     try {
