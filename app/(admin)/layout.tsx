@@ -17,6 +17,7 @@ import { supabase } from "@/lib/supabase";
 import { auth } from "@/lib/firebase";
 import { signOut } from "firebase/auth";
 import Cookies from "js-cookie";
+import { useLanguage } from "@/lib/context/LanguageContext"; 
 
 export default function AdminLayout({
   children,
@@ -24,15 +25,17 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { lang, setLang, t } = useLanguage();
   const pathname = usePathname();
   const router = useRouter();
 
   const handleLogout = async () => {
+    setIsSidebarOpen(false);
     await signOut(auth);
     await supabase.auth.signOut();
     Cookies.remove("session");
     Cookies.remove("role");
-    router.push("/login");
+    window.location.href = "/login";
   };
 
   const navItems = [
@@ -60,7 +63,7 @@ export default function AdminLayout({
               <Link 
                 key={item.href} 
                 href={item.href}
-                className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all ${
+                className={`block w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all ${
                   isActive 
                     ? "bg-[#1F295D] text-white shadow-lg font-semibold" 
                     : "text-gray-500 hover:bg-gray-50 hover:text-[#1F295D]"
@@ -73,23 +76,52 @@ export default function AdminLayout({
           })}
         </nav>
 
+        {/* language toggle in desktop sidebar */}
+        <div className="flex items-center gap-2 bg-gray-50 p-2 rounded-xl border border-gray-100 mt-6">
+          <button 
+            onClick={() => setLang("en")}
+            className={`flex-1 text-xs font-bold py-1.5 rounded-lg transition-all ${lang === "en" ? "bg-white text-[#DA1515F3] shadow-sm" : "text-gray-400"}`}
+          >
+            EN
+          </button>
+          <button 
+            onClick={() => setLang("kn")}
+            className={`flex-1 text-xs font-bold py-1.5 rounded-lg transition-all ${lang === "kn" ? "bg-white text-[#DA1515F3] shadow-sm" : "text-gray-400"}`}
+          >
+            KN
+          </button>
+        </div>
+
         <div className="mt-auto">
           <button 
             onClick={handleLogout}
             className="flex items-center space-x-3 px-4 py-3 w-full text-gray-500 hover:bg-red-50 hover:text-red-600 rounded-xl transition-all"
           >
             <LogOut className="w-5 h-5" />
-            <span>Logout</span>
+            <span>{lang === "en" ? "Logout" : "ನಿರ್ಗಮನ"}</span>
           </button>
         </div>
       </aside>
 
       {/* Mobile Header */}
       <div className="lg:hidden fixed top-0 left-0 right-0 bg-white border-b border-gray-100 z-50 px-4 h-16 flex items-center justify-between">
-        <Link href="/admin/dashboard" className="text-xl font-bold tracking-tight">
-          <span className="text-[#911A20]">Admin</span>
-          <span className="text-[#1F295D]"> Panel</span>
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link href="/admin/dashboard" className="text-xl font-bold tracking-tight">
+            <span className="text-[#911A20]">Admin</span>
+            <span className="text-[#1F295D]"> Panel</span>
+          </Link>
+          {/* language toggle always visible in header */}
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={() => setLang("en")}
+              className={`text-xs font-bold py-1 rounded-lg transition-all ${lang === "en" ? "text-[#DA1515F3]" : "text-gray-400"}`}
+            >EN</button>
+            <button 
+              onClick={() => setLang("kn")}
+              className={`text-xs font-bold py-1 rounded-lg transition-all ${lang === "kn" ? "text-[#DA1515F3]" : "text-gray-400"}`}
+            >KN</button>
+          </div>
+        </div>
         <button 
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           className="p-2 text-gray-500 hover:bg-gray-50 rounded-lg"
@@ -134,7 +166,7 @@ export default function AdminLayout({
                       key={item.href} 
                       href={item.href}
                       onClick={() => setIsSidebarOpen(false)}
-                      className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all ${
+                      className={`block w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all ${
                         isActive 
                           ? "bg-[#1F295D] text-white shadow-lg font-semibold" 
                           : "text-gray-500 hover:bg-gray-50"
@@ -147,13 +179,28 @@ export default function AdminLayout({
                 })}
               </nav>
 
-              <div className="mt-auto">
+              <div className="mt-auto space-y-4">
+                {/* language toggle inside mobile menu */}
+                <div className="flex items-center gap-2 bg-gray-50 p-2 rounded-xl border border-gray-100">
+                  <button 
+                    onClick={() => setLang("en")}
+                    className={`flex-1 text-xs font-bold py-1.5 rounded-lg transition-all ${lang === "en" ? "bg-white text-[#DA1515F3] shadow-sm" : "text-gray-400"}`}
+                  >
+                    EN
+                  </button>
+                  <button 
+                    onClick={() => setLang("kn")}
+                    className={`flex-1 text-xs font-bold py-1.5 rounded-lg transition-all ${lang === "kn" ? "bg-white text-[#DA1515F3] shadow-sm" : "text-gray-400"}`}
+                  >
+                    KN
+                  </button>
+                </div>
                 <button 
                   onClick={handleLogout}
                   className="flex items-center space-x-3 px-4 py-3 w-full text-gray-500 hover:bg-red-50 hover:text-red-600 rounded-xl transition-all"
                 >
                   <LogOut className="w-5 h-5" />
-                  <span>Logout</span>
+                  <span>{lang === "en" ? "Logout" : "ನಿರ್ಗಮನ"}</span>
                 </button>
               </div>
             </motion.aside>
