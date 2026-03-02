@@ -35,8 +35,8 @@ export default function DashboardLayout({
     await supabase.auth.signOut();
     Cookies.remove("session");
     Cookies.remove("role");
-    // force full reload to login page
-    window.location.href = "/login";
+    // force full reload to landing page
+    window.location.href = "/";
   };
 
   const navItems = [

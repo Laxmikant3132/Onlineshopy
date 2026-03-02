@@ -137,16 +137,16 @@ export default function CustomerDashboard() {
   return (
     <div className="space-y-10 pb-12">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
         <div>
           <h1 className="text-3xl font-bold text-[#1F295D]">{t({ en: "My Dashboard", kn: "ನನ್ನ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್" })}</h1>
-          <p className="text-gray-500">{t({ en: "Track and manage your government service applications.", kn: "ನಿಮ್ಮ ಸರ್ಕಾರಿ ಸೇವಾ ಅರ್ಜಿಗಳನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡಿ ಮತ್ತು ನಿರ್ವಹಿಸಿ." })}</p>
+          <p className="text-gray-500 mt-1">{t({ en: "Track and manage your government service applications.", kn: "ನಿಮ್ಮ ಸರ್ಕಾರಿ ಸೇವಾ ಅರ್ಜಿಗಳನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡಿ ಮತ್ತು ನಿರ್ವಹಿಸಿ." })}</p>
         </div>
-        <Link href="/dashboard/apply">
+        <Link href="/dashboard/apply" className="w-full sm:w-auto">
           <motion.button
-            whileHover={{ scale: 1.05, backgroundColor: "#DA1515" }}
-            whileTap={{ scale: 0.95 }}
-            className="flex items-center space-x-2 bg-[#DA1515F3] text-white px-6 py-3 rounded-2xl font-bold shadow-lg shadow-red-100 transition-all"
+            whileHover={{ scale: 1.02, backgroundColor: "#DA1515" }}
+            whileTap={{ scale: 0.98 }}
+            className="w-full flex items-center justify-center space-x-2 bg-[#DA1515F3] text-white px-8 py-4 rounded-2xl font-bold shadow-lg shadow-red-100 transition-all"
           >
             <Plus className="w-5 h-5" />
             <span>{t({ en: "Apply New Service", kn: "ಹೊಸ ಸೇವೆಗಾಗಿ ಅರ್ಜಿ ಸಲ್ಲಿಸಿ" })}</span>

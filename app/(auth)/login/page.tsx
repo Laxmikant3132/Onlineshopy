@@ -42,9 +42,9 @@ export default function LoginPage() {
 
       let role = userData?.role;
 
-      // Special case: Ensure specific user is Admin
-      const adminEmail = "laxmikanttalli303@gmail.com";
-      if (email.toLowerCase() === adminEmail.toLowerCase()) {
+      // Special case: Ensure specific users are Admin
+      const adminEmails = ["laxmikanttalli303@gmail.com", "rayappa750@gmail.com"];
+      if (adminEmails.map(e => e.toLowerCase()).includes(email.toLowerCase())) {
         role = "admin";
         
         // Update role in DB if it's currently customer or missing

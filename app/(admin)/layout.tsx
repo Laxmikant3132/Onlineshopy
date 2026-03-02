@@ -35,7 +35,7 @@ export default function AdminLayout({
     await supabase.auth.signOut();
     Cookies.remove("session");
     Cookies.remove("role");
-    window.location.href = "/login";
+    window.location.href = "/";
   };
 
   const navItems = [

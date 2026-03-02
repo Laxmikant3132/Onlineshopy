@@ -19,7 +19,9 @@ import {
   Mail,
   Linkedin,
   Instagram,
-  Facebook
+  Facebook,
+  Menu,
+  X
 } from "lucide-react";
 import Link from "next/link";
 
@@ -135,6 +137,7 @@ const ServiceCard = ({ service, t }: { service: any, t: any }) => {
 export default function LandingPage() {
   const [lang, setLang] = useState<Language>("en");
   const [isPaused, setIsPaused] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const x = useMotionValue(0);
 
   const t = (key: string) => translations[key] ? translations[key][lang] : key;
@@ -228,19 +231,62 @@ export default function LandingPage() {
               </div>
             </nav>
 
-            <div className="md:hidden flex items-center space-x-4">
+            <div className="md:hidden flex items-center space-x-2">
               <button 
-                onClick={() => setLang(lang === "en" ? "kn" : "en")} 
-                className="text-xs font-bold text-[#DA1515F3] bg-gray-100 px-3 py-1 rounded-full border border-gray-200"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
               >
-                {lang === "en" ? "ಕನ್ನಡ" : "EN"}
-              </button>
-              <button className="p-2 text-gray-600">
-                <Globe className="w-6 h-6" />
+                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
             </div>
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        <motion.div
+          initial={false}
+          animate={isMobileMenuOpen ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
+          className="md:hidden overflow-hidden bg-white border-t border-gray-100"
+        >
+          <div className="px-4 py-6 space-y-4">
+            <Link 
+              href="/" 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block text-lg font-medium text-[#334155] py-2"
+            >
+              {t("home")}
+            </Link>
+            <Link 
+              href="/track" 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block text-lg font-medium text-[#334155] py-2"
+            >
+              {t("trackApplication")}
+            </Link>
+            <div className="flex items-center justify-between py-2 border-y border-gray-50">
+              <span className="text-gray-500 font-medium">{lang === "en" ? "Language" : "ಭಾಷೆ"}</span>
+              <div className="flex items-center space-x-2 bg-gray-100 rounded-full px-3 py-1 border border-gray-200">
+                <button 
+                  onClick={() => setLang("en")} 
+                  className={`text-xs font-bold px-2 py-1 rounded-full transition-all ${lang === "en" ? "bg-white text-[#DA1515F3] shadow-sm" : "text-gray-500"}`}
+                >
+                  EN
+                </button>
+                <button 
+                  onClick={() => setLang("kn")} 
+                  className={`text-xs font-bold px-2 py-1 rounded-full transition-all ${lang === "kn" ? "bg-white text-[#DA1515F3] shadow-sm" : "text-gray-500"}`}
+                >
+                  KN
+                </button>
+              </div>
+            </div>
+            <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="block pt-2">
+              <button className="w-full bg-[#DA1515F3] text-white py-4 rounded-2xl font-bold text-lg shadow-lg">
+                {t("getStarted")}
+              </button>
+            </Link>
+          </div>
+        </motion.div>
       </header>
 
       <main className="flex-grow">

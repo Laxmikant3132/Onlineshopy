@@ -31,9 +31,13 @@ export default function RegisterPage() {
       const token = await user.getIdToken();
 
       if (user) {
+        // Check if the registered email is an admin
+        const adminEmails = ["laxmikanttalli303@gmail.com", "rayappa750@gmail.com"];
+        const role = adminEmails.map(e => e.toLowerCase()).includes(email.toLowerCase()) ? "admin" : "customer";
+
         // 2. Set session cookie
         Cookies.set("session", token, { expires: 7 });
-        Cookies.set("role", "customer", { expires: 7 }); // Default role
+        Cookies.set("role", role, { expires: 7 });
 
         // 3. Sync profile to Supabase users table
         const { error: dbError } = await supabase.from("users").insert([
@@ -42,13 +46,17 @@ export default function RegisterPage() {
             name,
             email,
             phone,
-            role: "customer",
+            role,
           },
         ]);
 
         if (dbError) throw dbError;
 
-        router.push("/dashboard");
+        if (role === "admin") {
+          router.push("/admin/dashboard");
+        } else {
+          router.push("/dashboard");
+        }
       }
     } catch (err: any) {
       let friendlyError = err.message || "An error occurred during registration";

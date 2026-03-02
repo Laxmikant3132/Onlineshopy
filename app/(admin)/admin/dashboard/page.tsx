@@ -107,10 +107,10 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-10 pb-12">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
         <div>
           <h1 className="text-3xl font-bold text-[#1F295D]">Admin Dashboard</h1>
-          <p className="text-gray-500">Overview of all service applications.</p>
+          <p className="text-gray-500 mt-1">Overview of all service applications.</p>
         </div>
       </div>
 
@@ -156,7 +156,7 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        <div className="overflow-x-auto">
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left">
             <thead>
               <tr className="bg-gray-50/50 text-gray-500 text-sm font-semibold">
@@ -207,6 +207,44 @@ export default function AdminDashboard() {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile View - Card based layout */}
+        <div className="md:hidden divide-y divide-gray-50">
+          {filteredApps.map((app) => (
+            <div key={app.id} className="p-6 space-y-4">
+              <div className="flex justify-between items-start">
+                <div className="flex flex-col">
+                  <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Application ID</span>
+                  <span className="font-bold text-[#1F295D]">{app.application_id}</span>
+                </div>
+                <span className={`px-3 py-1 rounded-full text-[10px] font-black border ${statusColors[app.status as keyof typeof statusColors]}`}>
+                  {app.status.toUpperCase()}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col">
+                  <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Customer</span>
+                  <span className="font-semibold text-gray-800 text-sm truncate">{app.users?.name}</span>
+                </div>
+                <div className="flex flex-col text-right">
+                  <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Service</span>
+                  <span className="font-semibold text-gray-600 text-sm truncate">{app.services?.name}</span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-2 border-t border-gray-50">
+                <span className="text-xs text-gray-400">{new Date(app.created_at).toLocaleDateString()}</span>
+                <Link href={`/admin/applications/${app.id}`}>
+                  <button className="flex items-center space-x-2 text-[#DA1515F3] font-bold text-sm bg-red-50 px-4 py-2 rounded-xl">
+                    <Eye className="w-4 h-4" />
+                    <span>View Details</span>
+                  </button>
+                </Link>
+              </div>
+            </div>
+          ))}
         </div>
         
         {filteredApps.length === 0 && (
