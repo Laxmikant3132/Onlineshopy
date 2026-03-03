@@ -73,7 +73,7 @@ export default function LoginPage() {
         role = "customer";
       }
 
-      // 5. Set role cookie for middleware
+      // 5. Set role cookie for proxy
       Cookies.set("role", role, { expires: 7 });
 
       // 6. Redirect based on role
@@ -166,6 +166,11 @@ export default function LoginPage() {
               </>
             )}
           </motion.button>
+          <div className="mt-4 text-right">
+            <Link href="/forgot-password" className="text-sm text-[#DA1515F3] hover:underline">
+              Forgot password?
+            </Link>
+          </div>
         </form>
 
         <div className="mt-8 text-center">
